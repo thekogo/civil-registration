@@ -3,7 +3,6 @@ import { Form, Row, Col, Select, Button, Input, DatePicker, Upload, message } fr
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import logo from '../image/logo.jpg'
 import firebase from '../api/firebase'
-import moment from 'moment';
 
 const { Option } = Select
 const { TextArea } = Input
@@ -71,7 +70,7 @@ function HomeComponent(props) {
               delete data['image']; 
               data.imageUrl = downloadURL;
               const db = firebase.database();
-              const userRef = await db.ref("users/").push(data); 
+              await db.ref("users/").push(data); 
               window.location ='./success'
             });
           });
@@ -126,6 +125,9 @@ function HomeComponent(props) {
                 <Col span={18} offset={3} style={{backgroundColor: 'white'}}>
                     <img src={logo} style={{width:'100%'}} alt="logo civil"/>
                     <h1 className="title">ทำเนียบรุ่นศิษย์เก่าโยธาตีนดอย</h1>
+                    <div className="center">
+                        <Button type="primary" href="/list" >ยอดผู้ลงทะเบียน</Button>
+                    </div>
                     <Row>
                         <Col span={20} offset={2}>
                             <Form 

@@ -9,6 +9,7 @@ import './App.css';
 //Component
 import Home from './components/HomeComponent'
 import Success from './components/SuccessComponent'
+import List from './components/ListComponent'
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
         <Switch>
           <Route path="/success">
             <Success />
+          </Route>
+          <Route path="/list">
+            <List />
           </Route>
           <Route path="/">
             <Home />

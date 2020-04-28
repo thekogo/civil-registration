@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-//hide config
+//config
 
 firebase.initializeApp(firebaseConfig);
 export default firebase;
