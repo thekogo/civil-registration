@@ -11,13 +11,15 @@ function SuccessComponent() {
 
     const [loading, setLoading] = useState(true)
     const [filteredInfo, setFilteredInfo] = useState([])
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
 
     const [users, setUsers] = useState({})
     const columns = [
         {
             title: 'ลำดับที่',
             key: 'index',
-            render: (text, record, index) => index+1,
+            render: (text, record, index) => (page-1) * pageSize + index+1,
         },
         {
             title:'รุ่น',
@@ -54,11 +56,6 @@ function SuccessComponent() {
             dataIndex: 'phone',
             key: 'phone'
         },
-        {
-            title:'Line ID',
-            dataIndex: 'line',
-            key: 'line'
-        },
     ]
 
     useEffect( () => {
@@ -75,6 +72,7 @@ function SuccessComponent() {
     }, [])
 
     const changeFilter = value => {
+        setPage(1)
         if(value != "") {
             setFilteredInfo([value])
         } else {
@@ -85,6 +83,8 @@ function SuccessComponent() {
 
     const handleChange = (pagination, filters, sorter) => {
         console.log('Various parameters', pagination, filters, sorter);
+        setPage(pagination.current)
+        setPageSize(pagination.pageSize)
         setFilteredInfo(filters.generation)
       };
     

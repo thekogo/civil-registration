@@ -13,7 +13,8 @@ function SuccessComponent(props) {
                     <div className="center">
                         <Button type="primary" href="/list" >ยอดผู้ลงทะเบียน</Button>
                     </div>
-                    <p style={{fontSize:'2em', textAlign:"center", color: 'green'}}>การลงทะเบียนเสร็จสิ้นขอบคุณในความร่วมมือ</p>
+                    <p style={{fontSize:'2em', textAlign:"center", color: 'green'}}>การลงทะเบียนเสร็จสิ้นขอบพระคุณพี่ๆทุกคนครับ</p>
+                    <p style={{fontSize:'2em', textAlign:"center", color: 'red'}}>หากต้องการแก้ไขข้อมูลกรุณาแจ้งมาด้วยนะครับ</p>
                 </Col>
             </Row>
         </div>

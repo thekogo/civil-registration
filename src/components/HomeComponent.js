@@ -1,11 +1,92 @@
 import React, { useState } from 'react'
-import { Form, Row, Col, Select, Button, Input, DatePicker, Upload, message } from 'antd'
+import { Form, Row, Col, Select, Button, Input, Upload, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import logo from '../image/logo.jpg'
 import firebase from '../api/firebase'
 
 const { Option } = Select
 const { TextArea } = Input
+
+const province_th = [
+    'กรุงเทพฯ',
+    'กระบี่',
+    'กาญจนบุรี',
+    'กาฬสินธุ์',
+    'กำแพงเพชร',
+    'ขอนแก่น',
+    'จันทบุรี',
+    'ฉะเชิงเทรา',
+    'ชลบุรี',
+    'ชัยนาท',
+    'ชัยภูมิ',
+    'ชุมพร',
+    'เชียงใหม่',
+    'เชียงราย',
+    'ตรัง',
+    'ตราด',
+    'ตาก',
+    'นครนายก',
+    'นครปฐม',
+    'นครพนม',
+    'นครราชสีมา',
+    'นครศรีธรรมราช',
+    'นครสวรรค์',
+    'นนทบุรี',
+    'นราธิวาส',
+    'น่าน',
+    'บึงกาฬ',
+    'บุรีรัมย์',
+    'ปทุมธานี',
+    'ประจวบคีรีขันธ์',
+    'ปราจีนบุรี',
+    'ปัตตานี',
+    'พระนครศรีอยุธยา',
+    'พะเยา',
+    'พังงา',
+    'พัทลุง',
+    'พิจิตร',
+    'พิษณุโลก',
+    'เพชรบุรี',
+    'เพชรบูรณ์',
+    'แพร่',
+    'ภูเก็ต',
+    'มหาสารคาม',
+    'มุกดาหาร',
+    'แม่ฮ่องสอน',
+    'ยโสธร',
+    'ยะลา',
+    'ร้อยเอ็ด',
+    'ระนอง',
+    'ระยอง',
+    'ราชบุรี',
+    'ลพบุรี',
+    'ลำปาง',
+    'ลำพูน',
+    'เลย',
+    'ศรีสะเกษ',
+    'สกลนคร',
+    'สงขลา',
+    'สตูล',
+    'สมุทรปราการ',
+    'สมุทรสงคราม',
+    'สมุทรสาคร',
+    'สระแก้ว',
+    'สระบุรี',
+    'สิงห์บุรี',
+    'สุโขทัย',
+    'สุพรรณบุรี',
+    'สุราษฎร์ธานี',
+    'สุรินทร์',
+    'หนองคาย',
+    'หนองบัวลำภู',
+    'อ่างทอง',
+    'อำนาจเจริญ',
+    'อุดรธานี',
+    'อุตรดิตถ์',
+    'อุทัยธานี',
+    'อุบลราชธานี',
+];
+
 
 function getBase64(img, callback) {
     const reader = new FileReader();
@@ -31,14 +112,17 @@ function HomeComponent(props) {
 
     const [loading, setLoading] = useState(false)
     const [imageUrl, setImageUrl] = useState('')
+    const [dis, setDis] = useState(false)
+    const [uploading, setUploading] = useState('')
 
 
     const handleSubmit = (values) => {
+        setDis(true)
         // Create a root reference
         const file = values['image']['file']['originFileObj']
-        var storageRef = firebase.storage().ref('image/' + values.line + file.name);
+        var storageRef = firebase.storage().ref('image/' + values.firstname + '_' + values.lastname + file.name);
 
-        const data = {...values, birthday: values['birthday'].format('YYYY-MM-DD')}
+        const data = {...values}
         Object.keys(data).forEach(key => data[key] === undefined ? delete data[key] : {});
         
 
@@ -52,6 +136,7 @@ function HomeComponent(props) {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
+            setUploading('Upload is ' + progress + '% done')
             switch (snapshot.state) {
               case firebase.storage.TaskState.PAUSED: // or 'paused'
                 console.log('Upload is paused');
@@ -199,25 +284,16 @@ function HomeComponent(props) {
                                         </Form.Item>
                                     
                                     </Col>
-                                    <Col lg={{span: 8, offset: 1}}>
-                                        <Form.Item label="วันเกิด" name="birthday" rules={[{required: true}]}>
-                                                <DatePicker
-                                                    style={{width:'100%'}}
-                                                    dateFormat="DD-MM-YYYY"
-                                                    disabledTime
-                                                />
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col lg={{span: 8}}>
+                                    <Col lg={{span: 8, offset:1}}>
                                         <Form.Item label="เบอร์โทรศัพท์" name="phone" rules={[{required: true}]}>
                                             <Input
                                                 placeholder="090-323xxxx"
                                             />
                                         </Form.Item>
                                     </Col>
-                                    <Col lg={{span:15, offset:1}}>
+                                </Row>
+                                <Row>
+                                    <Col lg={{span:15}}>
                                         <Form.Item label="ที่อยู่ปัจจุบัน" name="address" rules={[{required: true}]}>
                                             <TextArea
                                                 rows={2}
@@ -237,45 +313,26 @@ function HomeComponent(props) {
                                         </Form.Item>
                                     
                                     </Col>
-                                    <Col lg={{span: 8, offset:1}}>
+                                    {/* <Col lg={{span: 8, offset:1}}>
                                         <Form.Item label="ตำแหน่ง (ถ้ามี)" name="position">
                                             <Input
                                                 placeholder="หัวหน้าฝ่าย..."
-
                                             />
                                         </Form.Item>
-                                    </Col>
-                                    <Col lg={{span: 17}}>
-                                        <Form.Item label="ที่อยู่ที่ทำงาน (ไม่จำเป็นต้องระบุ)" name="workaddress">
-                                                <TextArea style={{width: '100%'}}/>
+                                    </Col> */}
+                                    <Col lg={{span: 8, offset:1 }}>
+                                        <Form.Item label="จังหวัด" name="workaddress" rules={[{required: true}]}>
+                                            <Select>
+                                            {province_th.map(province => (
+                                                <Option value={province}>{province}</Option>
+                                            ))}
+                                            </Select>
                                         </Form.Item>
                                     
                                     </Col>
                                 </Row>
-
-                                <hr/>
-                                <h2>ข้อมูลติดต่อ</h2>
-                                <Row>
-                                    <Col lg={{span: 16}}>
-                                        <Form.Item label="Line ID" name="line" rules={[{ required: true }]}>
-                                                <Input/>
-                                        </Form.Item>
-                                    
-                                    </Col>
-                                    <Col lg={{span: 16}}>
-                                        <Form.Item label="อีเมล (ถ้ามี)" name="email">
-                                                <Input/>
-                                        </Form.Item>
-                                    
-                                    </Col>
-                                    <Col lg={{span: 16}}>
-                                        <Form.Item label="Facebook (ถ้ามี)" name="facebook">
-                                                <Input/>
-                                        </Form.Item>
-                                    
-                                    </Col>
-                                </Row>
-                                <Button htmlType="submit" type="primary" style={{marginBottom:'20px', float:'right'}}>บันทึกข้อมูล</Button>
+                                <span style={{textAlign:'center'}}>{uploading}</span>
+                                <Button disabled={dis} htmlType="submit" type="primary" style={{marginBottom:'20px', float:'right'}}>บันทึกข้อมูล</Button>
                             </Form>
                         </Col>
                     </Row>

@@ -32,7 +32,3 @@ html, body {
 .ant-table-filter-trigger-container {
   display: none !important;
 }
-
-.ant-pagination {
-  display: none !important;
-}
